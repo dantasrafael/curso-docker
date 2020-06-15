@@ -1,0 +1,56 @@
+docker OBJETO
+docker container --help
+docker image --help
+docker volume --help
+docker network --help
+
+docker container ps -a -> Listar todos os containers
+docker container run -it debian bash -> Criar em modo interativo
+docker container run -ai debian -> Criar em modo interativo
+docker container run --name mydeb -it debian bash -> Criar com nome
+
+docker container run -p 8080:80 (PORTA_LOCAL:PORTA_CONTAINER) nginx
+docker container run -p 8080:80 -v $(pwd)/not-found:/usr/share/nginx/html (VOLUME_LOCAL:VOLUME_CONTAINER) nginx
+
+docker container run -d --name ex_daemon_basic -p 8080:80 -v $(pwd)/html nginx -> modo daemon
+
+docker container stop/start/restart NOME/ID_CONTAINER
+docker container stop ex_daemon_basic -> parar o container
+docker container start ex_daemon_basic -> iniciar o container
+docker container restart ex_daemon_basic -> reiniciar o container
+
+docker container logs NOME/ID_CONTAINER
+docker container logs ex_daemon_basic -> ver o log do container
+
+docker container inspect NOME/ID_CONTAINER
+docker container inspect ex_daemon_basic -> inspecionar os dados do container
+
+docker container exec NOME/ID_CONTAINER COMANDO
+docker container exec ex_daemon_basic uname -or -> executar o comando dentro do container
+
+docker image pull redis:latest -> Baixar imagem mais recente
+docker image ls -> Listar imagens
+docker image tag redis:latest cod3r:redis -> gera uma nova tag a partir de outra
+docker image rm redis:latest cod3r:redis -> Apagar as duas imagens em cache
+docker image inspect redis:latest -> Inspecionar as caracteristicas da imagem
+docker image build -> Gerar a imagem
+docker image push -> Publicar a imagem
+
+TOMAR O CUIDADO DE NÃO USAR A VERSÃO LATEST... PODE QUEBRAR O SOFTWARE COM NOVAS ATUALIZAÇÕES.
+
+docker image build -t ex-simple-build . -> gerar um nova imagem "-t" (nome da imagem) "." pasta local
+docker image build --build-arg S3_BUCKET=myapp -t ex-build-args . -> gerar uma nova imagem passando parametros no construtor
+
+docker image inspect --format="{{index .Config.Labels \"maintainer\"}}" ex-build-args -> Retorna o mantenedor dessa imagem
+
+docker container run -d --net none debian -> Container sem acesso a rede
+docker network create --driver bridge NOME_NOVA_REDE -> Criar uma nova rede com o driver bridge
+docker network connect bridge NOME_CONTAINER -> Adicionar acesso a rede bridge no container
+docker network disconnect bridge NOME_CONTAINER -> Remove acesso a rede bridge no container
+
+
+docker-compose up -d -> Inicializa o compose em mode daemon
+docker-compose down -> Desliga e remove o compose
+docker-compose logs -f -t -> Exibe todos os logs
+docker-compose logs -f -t worker -> Exibe todos os logs daquele serviço worker
+docker-compose up -d --scale worker=3 -> Inicializa 3 container do serviço worker
